@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>SVG Image Viewer</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="CHANGE ME" />
+		<meta name="keywords" content="CHANGE ME" />
+		<meta name="author" content="CHANGE ME" />
+		<!-- Load jquery, bootstrap -->
+		<script
+			src="https://code.jquery.com/jquery-3.3.1.min.js"
+			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+			crossorigin="anonymous"
+		></script>
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+			integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+			crossorigin="anonymous"
+		></script>
+		<!-- Custom CSS -->
+		<link
+			rel="stylesheet"
+			href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+		/>
+		<link rel="stylesheet" type="text/css" href="/style.css" />
+		<!-- Custom CSS End -->
+	</head>
+	<body>
+		<header>
+			<h4>SvgImageViewer</h4>
+			<nav>
+				<div class="active-menu-item menu-item">
+					<a href="">File Log</a>
+				</div>
+				<div class="menu-item">
+					<a href="">Svg Viewer</a>
+				</div>
+                <div class="create-svg-wrap">
+                    <button id="create_svg_btn">Create an SVG</button>
+                </div>
+			</nav>
+		</header>
+		<br />
+		<section class="file-log-section">
+			<table id="file_log_table">
+				<thead>
+					<tr>
+						<td class="title">Image</td>
+						<td>Filename</td>
+						<td class="file-size">Size</td>
+						<td class="num-rects">Number of rectangles</td>
+						<td class="num-circles">Number of circles</td>
+						<td class="num-paths">Number of paths</td>
+						<td class="num-groups">Number of groups</td>
+					</tr>
+				</thead>
+				<tbody id="tbody"></tbody>
+			</table>
+			<div class="btn-wrap">
+				<button id="upload_file" onclick="uploadFile()">
+					<i class="uil uil-upload"></i>
+				</button>
+				<input
+					id="file-input"
+					type="file"
+					name="name"
+					style="display: none"
+				/>
+			</div>
+		</section>
+
+		<section class="svg-viewer-section hidden">
+			<div class="svg-details">
+				<div class="dropdown-wrap">
+					<select name="svg-dropdown" id="svg_dropdown">
+						
+					</select>
+				</div>
+				<hr />
+				<div class="title-wrap">
+					<label for="title">Title</label>
+					<div>
+						<input class="svgAttr" id="title_attr" type="text" value="" />
+						<button class="svg-attr-confirm">confirm</button>
+					</div>
+				</div>
+				<div class="desc-wrap">
+					<label for="title">Description</label>
+					<div>
+						<input
+                            id="desc_attr"
+							class="svgAttr"
+							type="text"
+							value=""
+						/>
+						<button class="svg-attr-confirm">confirm</button>
+					</div>
+				</div>
+				<hr />
+				<div class="components">
+					<label>Components</label>
+					<div class="edit-wrap">
+						<div class="type-wrap">
+							<p>Edit / Add Addtribute</p>
+							<span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
+							<input class="attributeName" type="text" />
+						</div>
+						<div>
+							<input
+								id="attrName"
+								type="text"
+								placeholder="name"
+							/>
+							<input
+								id="attrValue"
+								type="text"
+								placeholder="value"
+							/>
+							<button id="editAttribute">confirm</button>
+							<div class="add-wrap">
+								<button id="add_shape">Add shape</button>
+								<button id="scale_shape">scale</button>
+							</div>
+						</div>
+					</div>
+					<div class="components-wrap"></div>
+				</div>
+			</div>
+			<div class="svg-view">
+				<img id="svg_view_img" src="" alt="" />
+			</div>
+		</section>
+
+        <div class="create-svg-modal hidden">
+            <div class="heading-wrap">
+				<h5>Creating a new Svg File</h5>
+				<button id="close_create_svg_modal"><i class="uil uil-x"></i></button>
+			</div>
+			<div class="main-content">
+				<div class="top-wrap">
+					<div class="tw-left">
+						<p>File name</p>
+						<div class="svg-name-wrap">
+							<input type="text" id="create_svg_filename" placeholder="name of svg file">
+							<input type="text" id="new_svg_title" placeholder="title of svg">
+							<input type="text" id="new_svg_desc" placeholder="description of svg">
+						</div>
+					</div>
+					<div class="tw-right">
+                        
+                    </div>
+				</div>
+                <div class="bottom-wrap">
+                    <div class="error_box"></div>
+                    <button id="createnew_svg_btn">Create SVG</button>
+                </div>
+			</div>
+        </div>
+
+		<div class="add-shape-modal hidden">
+			<div class="heading-wrap">
+				<h5 id="add_shape_filename">Adding shape to <span></span></h5>
+				<button id="close_add_shape_modal"><i class="uil uil-x"></i></button>
+			</div>
+			<div class="main-content">
+				<div class="top-wrap">
+					<div class="tw-left">
+						<p>Choose a shape to add</p>
+						<div class="shapes">
+							<div class="rectangle shape-btn">rectangle</div>
+							<div class="circle shape-btn">circle</div>
+						</div>
+					</div>
+					<div class="tw-right">
+						<div class="requires-attr">
+							<p>Required attributes</p>
+
+							<div class="rect-attr">
+                                <input type="text" class="add-shape-attr" id="rect-attr-x" placeholder="x"></input>
+                                <input type="text" class="add-shape-attr" id="rect-attr-y" placeholder="y"></input>
+                                <input type="text" class="add-shape-attr" id="rect-attr-w" placeholder="width"></input>
+                                <input type="text" class="add-shape-attr" id="rect-attr-h" placeholder="height"></input>
+                                <select id="rect-attr-units">
+                                    <option value="" disabled selected>units</option>
+                                    <option value="cm" >cm</option>
+                                    <option value="px" >px</option>
+                                    <option value="em" >em</option>
+                                    <option value="ex" >ex</option>
+                                    <option value="pt" >pt</option>
+                                    <option value="pc" >pc</option>
+                                    <option value="mm" >mm</option>
+                                    <option value="in" >in</option>
+                                    <option value="%" >%</option>
+                                    <option value="" >none</option>
+                                </select>
+                            </div>
+							<div class="circle-attr hidden">
+                                <input type="text" class="add-shape-attr" id="circ-attr-cx" placeholder="cx"></input>
+                                <input type="text" class="add-shape-attr" id="circ-attr-cy" placeholder="cy"></input>
+                                <input type="text" class="add-shape-attr" id="circ-attr-r" placeholder="radius"></input>
+                                <select id="circ-attr-units">
+                                    <option value="" disabled selected>units</option>
+                                    <option value="cm" >cm</option>
+                                    <option value="px" >px</option>
+                                    <option value="em" >em</option>
+                                    <option value="ex" >ex</option>
+                                    <option value="pt" >pt</option>
+                                    <option value="pc" >pc</option>
+                                    <option value="mm" >mm</option>
+                                    <option value="in" >in</option>
+                                    <option value="%" >%</option>
+                                    <option value="" >none</option>
+                                </select>
+                            </div>
+						</div>
+					</div>
+				</div>
+                <div class="bottom-wrap">
+                    <div class="error_box"></div>
+                    <button id="add_shape_btn">Add shape</button>
+                </div>
+			</div>
+		</div>
+
+		<div class="scale-shape-modal hidden">
+			<div class="heading-wrap">
+				<h5 id="scale_shape_filename">Scaling <span></span></h5>
+				<button id="close_scale_shape_modal"><i class="uil uil-x"></i></button>
+			</div>
+			<div class="main-content">
+				<div class="top-wrap">
+					<div class="tw-left">
+						<p>Choose shapes to scale</p>
+						<div class="shapes">
+							<div class="rectangle shape-btn">rectangle</div>
+							<div class="circle shape-btn">circle</div>
+						</div>
+					</div>
+					<div class="tw-right">
+                        <div class="scale-by">
+                            <p>Scale by</p>
+                            <input id="scale_shape_input" type="range" min="1" max="100" step="1" value="1" oninput="this.nextElementSibling.value = this.value">
+                            <output>1</output>
+                        </div>
+                    </div>
+				</div>
+                <div class="bottom-wrap">
+                    <div class="error_box"></div>
+                    <button id="scale_shape_btn">Scale shape</button>
+                </div>
+			</div>
+		</div>
+
+
+		<!-- Leave me at the bottom of body -->
+		<script src="/index.js"></script>
+	</body>
+</html>
